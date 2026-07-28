@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>TSG Controller - Side Panel</title>
+  <link rel="preload" href="assets/bg.png" as="image">
+  <link rel="stylesheet" href="sidepanel.css?v=20260703d">
+  <style>
+    /* Force-replace any icon/logo images that aren't our brand assets */
+    img[src*="icon"]:not(.sp-brand-logo),
+    img[src*="gringow"]:not(.sp-brand-logo),
+    img[src*="lovable-square"]:not(.sp-brand-logo),
+    img[src*="logo-master"]:not(.sp-brand-logo) {
+      content: url('assets/shield-v2.png') !important;
+      width: 110px !important; height: 110px !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    /* Strip the white rounded box behind the icon */
+    img[src*="icon"] + *,
+    div:has(> img[src*="icon"]):not(.sp-header):not(.sp-brand) {
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+  /* ── Hidden buttons only — no colour overrides ── */
+  .ql-shield-btn,
+  .sp-shield-btn,
+  .ql-native-chat-btn,
+  .sp-native-chat-btn,
+  .ql-native-badge,
+  .ql-native-return-btn,
+  .sp-theme-btn,
+  .sp-notif-btn,
+  .sp-logout-btn,
+  .plano-btn,
+  .plano-modal,
+  .plano-overlay,
+  .ql-modo-plano-btn,
+  .ql-modo-plano-modal,
+  .ql-modo-plano-overlay,
+  div.sp-action-left { display: none !important; }
+  .sp-footer { justify-content: center !important; }
+  .sp-footer-badge { margin: 0 auto !important; background: transparent !important; border: 1.5px solid transparent !important; background-clip: padding-box !important; font-size: 11px !important; font-weight: 700 !important; letter-spacing: 0.03em !important; position: relative !important; }
+  .sp-footer-badge::before { content: '' !important; position: absolute !important; inset: -1.5px !important; border-radius: inherit !important; padding: 1.5px !important; background: linear-gradient(to right, #e040fb, #7c4dff, #2979ff, #00e5ff) !important; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important; -webkit-mask-composite: xor !important; mask-composite: exclude !important; pointer-events: none !important; }
+  .sp-footer-badge span, .sp-footer-badge { background: linear-gradient(to right, #e040fb, #7c4dff, #2979ff, #00e5ff) !important; -webkit-background-clip: text !important; -webkit-text-fill-color: transparent !important; background-clip: text !important; }
+  .sp-license-gate,
+  .sp-body,
+  #sp-body { background: transparent !important; box-shadow: none !important; border: none !important; }
+  .sp-license-gate img,
+  .sp-lock-icon img,
+  .ql-lock-icon img { width: 140px !important; height: 140px !important; display: block !important; margin: 0 auto !important; visibility: visible !important; }
+  .sp-lock-icon,
+  .ql-lock-icon { min-width: 140px !important; min-height: 140px !important; width: 140px !important; height: 140px !important; display: flex !important; justify-content: center !important; margin: 0 auto !important; }
+  .sp-license-gate { display: flex !important; flex-direction: column !important; align-items: center !important; }
+  .sp-notif-btn.sp-unlocked, .sp-logout-btn.sp-unlocked { display: inline-flex !important; opacity: 0; animation: sp-fadein 0.4s ease forwards; }
+  @keyframes sp-fadein { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .sp-logout-btn.sp-unlocked { animation-delay: 0.1s; }
+  html, body {
+    background-color: #0a0a2e !important;
+    background-image: url('assets/bg.png') !important;
+    background-size: cover !important;
+    background-position: top center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: local !important;
+    width: 100% !important;
+    min-height: 100vh !important;
+  }
+  </style>
+</head>
+<body>
+  <div class="sp-header">
+    <div class="sp-brand">
+      <img class="sp-brand-logo" src="assets/tsg-text-logo.png" alt=""><span class="sp-brand-text"></span>
+      <span class="sp-badge">3.8.6</span>
+    </div>
+    <div class="sp-header-actions">
+      <div class="ql-lang-sw" id="sp-lang-sw" style="display:none">
+        <button class="ql-lang-btn ql-lang-active" data-lang="en">EN</button>
+      </div>
+
+      <button class="sp-icon-btn sp-notif-btn" data-i18n-title="header.notifications" title="Notifications">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="sp-notif-badge" style="display:none">0</span>
+      </button>
+      <button class="sp-icon-btn sp-theme-btn" data-i18n-title="header.theme" title="Theme">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="sp-icon-btn sp-logout-btn" data-i18n-title="header.logout" title="Logout"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+    </div>
+  </div>
+  
+  <div class="sp-body" id="sp-body">
+    <div class="sp-license-gate" id="sp-loading" style="padding:40px 0;text-align:center">
+      <p style="color:var(--ql-text-muted)" data-i18n="loading">⏳ Loading...</p>
+    </div>
+  </div>
+
+  <div class="sp-footer">
+    <button class="sp-back-to-popup" id="sp-back-to-popup" title="Back to floating mode" data-i18n="sp.backToPopup" style="display:none !important"></button>
+    <a href="https://wa.me/8801787261019" target="_blank" class="sp-support-link" style="display:none">
+      <span data-i18n="footer.support">Support</span>
+    </a>
+     <span class="sp-footer-badge">Developed by TSG Controller • v3.8.6</span>
+  </div>
+
+  <div class="sp-notif-panel" id="sp-notif-panel" style="display:none">
+    <div class="sp-notif-header">
+      <span data-i18n="notif.title">Notifications</span>
+      <div style="display:flex;gap:6px;align-items:center;">
+        <button id="sp-notif-markread" data-i18n-title="notif.markRead" title="Mark all as read" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--ql-text-muted);padding:2px 6px;border-radius:4px;">✓ Read</button>
+        <button class="sp-notif-close" id="sp-notif-close">✕</button>
+      </div>
+    </div>
+    <div class="sp-notif-list" id="sp-notif-list">
+      <p class="sp-notif-empty" data-i18n="notif.loading">Loading...</p>
+    </div>
+  </div>
+
+  <script>
+    // Fix validation messages + force all text to English
+    (function () {
+      // PT → EN exact and partial replacements
+      var PT_EN = [
+        // Buttons / actions
+        ['Baixar Código Fonte',       'Download Source Code'],
+        ['Baixar C\u00f3digo Fonte',  'Download Source Code'],
+        ['Criar Novo Projeto',        'Create New Project'],
+        ['Remover Marca d\u2019\u00e1gua','Remove Watermark'],
+        ["Remover Marca d'água",      'Remove Watermark'],
+        ['Remover Marca',             'Remove Watermark'],
+        ['Usar Chat Padr\u00e3o',     'Use Standard Chat'],
+        ['Usar Chat Padrao',          'Use Standard Chat'],
+        ['Ativar Escudo',             'Enable Shield'],
+        ['Validar Licen\u00e7a',      'Validate License'],
+        ['Validar Licenca',           'Validate License'],
+        ['Ativar Licen\u00e7a',       'Activate License'],
+        ['Ativar Licenca',            'Activate License'],
+        // Error / status messages
+        ['Abra uma p\u00e1gina de projeto do Lovable primeiro.', 'Open a Lovable project page first.'],
+        ['Abra uma pagina de projeto do Lovable primeiro.',      'Open a Lovable project page first.'],
+        ['Insira sua chave de licen\u00e7a para desbloquear.',   'Enter your license key to unlock.'],
+        ['Insira sua chave de licenca para desbloquear.',        'Enter your license key to unlock.'],
+        ['Chave de licen\u00e7a inv\u00e1lida.',  'Invalid license key.'],
+        ['Chave inv\u00e1lida.',                  'Invalid license key.'],
+        ['Licen\u00e7a ativada com sucesso.',     'License activated successfully.'],
+        ['Erro ao validar licen\u00e7a.',         'Error validating license.'],
+        // UI labels
+        ['Notifica\u00e7\u00f5es',   'Notifications'],
+        ['Notificacoes',             'Notifications'],
+        ['Carregando\u2026',         'Loading\u2026'],
+        ['Carregando...',            'Loading...'],
+        ['Marcar como lido',         'Mark as read'],
+        ['Voltar ao Popup',          'Back to Popup'],
+        ['Suporte',                  'Support'],
+        ['Configura\u00e7\u00f5es',  'Settings'],
+        ['Configuracoes',            'Settings'],
+        ['Hist\u00f3rico',           'History'],
+        ['Historico',                'History'],
+        ['Remover Hist\u00f3rico',   'Remove History'],
+        ['Tema',                     'Theme'],
+        ['Idioma',                   'Language'],
+        ['Plano',                    'Plan'],
+        ['Ativar',                   'Activate'],
+        ['Desativar',                'Deactivate'],
+        ['N\u00e3o mostrar novamente','Don\'t show again'],
+        ['Nao mostrar novamente',    'Don\'t show again'],
+        ['Fechar',                   'Close'],
+        ['Confirmar',                'Confirm'],
+        ['Cancelar',                 'Cancel'],
+        ['Salvar',                   'Save'],
+        ['Entrar',                   'Enter'],
+        ['Sair',                     'Logout'],
+        // Plan mode modal strings
+        ['Aten\u00e7\u00e3o \u2014 Modo Plan',  'Attention \u2014 Plan Mode'],
+        ['Atencao \u2014 Modo Plan',             'Attention \u2014 Plan Mode'],
+        ['Aten\u00e7\u00e3o',                    'Attention'],
+        ['O Modo Plan/Pensar pode consumir cr\u00e9ditos, mas oferece um excelente aux\u00edlio. Use com modera\u00e7\u00e3o!',
+         'Plan/Think Mode can consume credits, but offers excellent assistance. Use in moderation!'],
+        ['pode consumir cr\u00e9ditos, mas oferece um excelente aux\u00edlio. Use com modera\u00e7\u00e3o!',
+         'can consume credits, but offers excellent assistance. Use in moderation!'],
+        ['pode consumir creditos, mas oferece um excelente auxilio. Use com moderacao!',
+         'can consume credits, but offers excellent assistance. Use in moderation!'],
+        ['Ative o Modo Plan e envie seu prompt pela extens\u00e3o.',
+         'Activate Plan Mode and send your prompt through the extension.'],
+        ['Ative o Modo Plan e envie seu prompt pela extensao.',
+         'Activate Plan Mode and send your prompt through the extension.'],
+        // i18n produces "Plan Mode" (EN) not "Modo Plan" — handle those mixed variants
+        ['Ative o Plan Mode e envie seu prompt pela extens\u00e3o.',
+         'Activate Plan Mode and send your prompt through the extension.'],
+        ['Ative o Plan Mode e envie seu prompt pela extensao.',
+         'Activate Plan Mode and send your prompt through the extension.'],
+        ['O Lovable vai gerar um plano. N\u00c3O clique no bot\u00e3o \u201cAprovar\u201d dentro do Lovable.',
+         'Lovable will generate a plan. Do NOT click the \u201cApprove\u201d button inside Lovable.'],
+        ['O Lovable vai gerar um plano. NAO clique no botao "Aprovar" dentro do Lovable.',
+         'Lovable will generate a plan. Do NOT click the "Approve" button inside Lovable.'],
+        // Mixed variants with partial EN already applied
+        ['O Lovable vai gerar um plano. Do NOT click the button \u201cAprovar\u201d dentro do Lovable.',
+         'Lovable will generate a plan. Do NOT click the \u201cApprove\u201d button inside Lovable.'],
+        ['O Lovable vai gerar um plano. Do NOT click the button "Aprovar" dentro do Lovable.',
+         'Lovable will generate a plan. Do NOT click the "Approve" button inside Lovable.'],
+        ['O Lovable vai gerar um plano.',         'Lovable will generate a plan.'],
+        ['N\u00c3O clique no bot\u00e3o',         'Do NOT click the button'],
+        ['NAO clique no botao',                   'Do NOT click the button'],
+        ['\u201cAprovar\u201d',                   '\u201cApprove\u201d'],
+        ['"Aprovar"',                             '"Approve"'],
+        ['dentro do Lovable',                     'inside Lovable'],
+        ['Copie o plano gerado e cole no campo de prompt da extens\u00e3o.',
+         'Copy the generated plan and paste it in the extension\'s prompt field.'],
+        ['Copie o plano gerado e cole no campo de prompt da extensao.',
+         'Copy the generated plan and paste it in the extension\'s prompt field.'],
+        // Mixed: "Copy the generated plan e and paste it in the prompt field da extensão."
+        ['e and paste it in the prompt field da extens\u00e3o.',
+         'and paste it in the prompt field of the extension.'],
+        ['e and paste it in the prompt field da extensao.',
+         'and paste it in the prompt field of the extension.'],
+        ['da extens\u00e3o',                      'of the extension'],
+        ['da extensao',                           'of the extension'],
+        ['Desligue o Modo Plan e envie o prompt pela extens\u00e3o. Nenhum cr\u00e9dito extra ser\u00e1 consumido!',
+         'Turn off Plan Mode and send the prompt through the extension. No extra credits will be consumed!'],
+        ['Desligue o Modo Plan e envie o prompt pela extensao. Nenhum credito extra sera consumido!',
+         'Turn off Plan Mode and send the prompt through the extension. No extra credits will be consumed!'],
+        // Mixed: "Desligue o Plan Mode e envie o prompt pela extensão. No extra credits will be consumed!"
+        ['Desligue o Plan Mode e envie o prompt pela extens\u00e3o. No extra credits will be consumed!',
+         'Turn off Plan Mode and send the prompt through the extension. No extra credits will be consumed!'],
+        ['Desligue o Plan Mode e envie o prompt pela extensao. No extra credits will be consumed!',
+         'Turn off Plan Mode and send the prompt through the extension. No extra credits will be consumed!'],
+        ['Nenhum cr\u00e9dito extra ser\u00e1 consumido',  'No extra credits will be consumed'],
+        ['Nenhum credito extra sera consumido',            'No extra credits will be consumed'],
+        // Remaining Portuguese fragments in mixed strings
+        ['e envie seu prompt pela extens\u00e3o',  'and send your prompt through the extension'],
+        ['e envie seu prompt pela extensao',       'and send your prompt through the extension'],
+        ['e envie o prompt pela extens\u00e3o',    'and send the prompt through the extension'],
+        ['e envie o prompt pela extensao',         'and send the prompt through the extension'],
+        ['pela extens\u00e3o',                     'through the extension'],
+        ['pela extensao',                          'through the extension'],
+        ['Entendi!',                 'Got it!'],
+        ['Modo Plan/Pensar',         'Plan/Think Mode'],
+        ['Modo Plano',               'Plan Mode'],
+        ['Modo Plan',                'Plan Mode'],
+        ['Desligar Modo Plano',      'Turn off Plan Mode'],
+        ['Ligar Modo Plano',         'Turn on Plan Mode'],
+        ['Desligue o Modo Plan',     'Turn off Plan Mode'],
+        ['Desligue o Plan Mode',     'Turn off Plan Mode'],
+        ['Ative o Modo Plan',        'Activate Plan Mode'],
+        ['Ative o Plan Mode',        'Activate Plan Mode'],
+        ['Copie o plano gerado',     'Copy the generated plan'],
+        ['cole no campo de prompt',  'and paste it in the prompt field'],
+        // Status / progress messages
+        ['Preparando\u2026',                         'Preparing\u2026'],
+        ['Preparando...',                            'Preparing...'],
+        ['Verificando token e projeto\u2026',        'Verifying token and project\u2026'],
+        ['Verificando token e projeto...',           'Verifying token and project...'],
+        ['Falhou',                                   'Failed'],
+        ['Pronto!',                                  'Done!'],
+        ['Projeto vazio criado! Envie seu prompt real pela extens\u00e3o.', 'Empty project created! Send your real prompt through the extension.'],
+        ['Projeto vazio criado! Envie seu prompt real pela extensao.',       'Empty project created! Send your real prompt through the extension.'],
+        ['Prompt enviado! Aguarde a Lovable aplicar o CSS.',  'Prompt sent! Waiting for Lovable to apply the CSS.'],
+        ['Aguarde a Lovable aplicar',                'Waiting for Lovable to apply'],
+        ['Envie seu prompt real pela extens\u00e3o', 'Send your real prompt through the extension'],
+        ['Envie seu prompt real pela extensao',      'Send your real prompt through the extension'],
+        // Button label mix (PT suffix on EN base)
+        ['Remove Watermark de \u00c1gua',   'Remove Watermark'],
+        ['Remove Watermark de Agua',        'Remove Watermark'],
+        ['de \u00c1gua',                    ''],
+        ['de Agua',                         ''],
+        // More status / error strings
+        ['Token inv\u00e1lido',             'Invalid token'],
+        ['Token invalido',                  'Invalid token'],
+        ['Projeto n\u00e3o encontrado',     'Project not found'],
+        ['Projeto nao encontrado',          'Project not found'],
+        ['Erro ao criar projeto',           'Error creating project'],
+        ['Erro ao enviar prompt',           'Error sending prompt'],
+        ['Erro de conex\u00e3o',            'Connection error'],
+        ['Erro de conexao',                 'Connection error'],
+        ['Tente novamente',                 'Try again'],
+        ['Processando\u2026',               'Processing\u2026'],
+        ['Processando...',                  'Processing...'],
+        ['Conclu\u00eddo',                  'Completed'],
+        ['Concluido',                       'Completed'],
+        ['Aguarde\u2026',                   'Please wait\u2026'],
+        ['Aguarde...',                      'Please wait...'],
+        ['Aguarde',                         'Please wait'],
+        ['Aplicando\u2026',                 'Applying\u2026'],
+        ['Aplicando...',                    'Applying...'],
+        ['CSS aplicado com sucesso',        'CSS applied successfully'],
+        ['Marca d\u2019\u00e1gua removida', 'Watermark removed'],
+        ["Marca d'água removida",           'Watermark removed'],
+        ['N\u00e3o foi poss\u00edvel',      'Could not'],
+        ['Nao foi possivel',                'Could not'],
+        // AI / optimize prompt messages
+        ['Digite um prompt antes de otimizar.',  'Enter a prompt before optimizing.'],
+        ['Digite um prompt antes de otimizar',   'Enter a prompt before optimizing'],
+        ['antes de otimizar',                    'before optimizing'],
+        ['Digite um prompt',                     'Enter a prompt'],
+        // Misc
+        ['Desenvolvido por',         'Developed by'],
+        ['Vers\u00e3o',              'Version'],
+      ];
+
+      var _busy = false;
+
+      function walkAndReplace() {
+        if (_busy) return;
+        _busy = true;
+        try {
+          var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+          var node;
+          while ((node = walker.nextNode())) {
+            var orig = node.nodeValue;
+            if (!orig || !orig.trim()) continue;
+            var val = orig;
+            for (var i = 0; i < PT_EN.length; i++) {
+              if (val.includes(PT_EN[i][0])) {
+                val = val.split(PT_EN[i][0]).join(PT_EN[i][1]);
+              }
+            }
+            // Fix "✕ undefined" → "✗ Incorrect"
+            if (/[✕✗xX×]\s*undefined/.test(val)) {
+              val = val.replace(/[✕✗xX×]\s*undefined/g, '✗ Incorrect');
+              if (node.parentElement) node.parentElement.style.color = '#f87171';
+            }
+            if (val.trim() === 'undefined') val = 'Incorrect';
+            if (val !== orig) node.nodeValue = val;
+          }
+        } finally {
+          _busy = false;
+        }
+      }
+
+      walkAndReplace();
+      new MutationObserver(walkAndReplace).observe(document.body, { childList: true, subtree: true });
+    })();
+
+    // Hide unwanted buttons by text content — language-agnostic, catches PT/EN/any
+    (function () {
+      var HIDDEN_PHRASES = [
+        'standard chat', 'native chat', 'use standard',
+        'usar chat', 'chat padr',   // Portuguese variants
+        'enable shield', 'escudo',  // Shield button EN + PT
+        'ativar escudo', 'shield'
+      ];
+      function shouldHide(text) {
+        var t = text.trim().toLowerCase();
+        return HIDDEN_PHRASES.some(function (p) { return t.includes(p); });
+      }
+      function hideButtons() {
+        document.querySelectorAll('button, a[role="button"]').forEach(function (el) {
+          if (shouldHide(el.textContent)) {
+            el.style.setProperty('display', 'none', 'important');
+          }
+        });
+      }
+      hideButtons();
+      new MutationObserver(hideButtons).observe(document.body, { childList: true, subtree: true });
+    })();
+  </script>
+  <script src="chrome-mock.js?v=20260703d" defer></script>
+  <script src="jszip.min.js?v=20260703d" defer></script>
+  <script src="hwFingerprint.js?v=20260703d" defer></script>
+  <script>
+    // ── Force English: patch chrome.storage.local.get BEFORE i18n.js reads it ──
+    (function forceEnglish() {
+      function patchStorage(storage) {
+        if (!storage || storage.__qlLangPatched) return;
+        storage.__qlLangPatched = true;
+        // Write 'en' immediately
+        try { storage.set({ ql_lang: 'en' }); } catch(e) {}
+        // Intercept every .get call to inject ql_lang:'en'
+        var _origGet = storage.get.bind(storage);
+        storage.get = function(keys, cb) {
+          var result = _origGet(keys, function(res) {
+            if (res && typeof res === 'object') res.ql_lang = 'en';
+            if (cb) cb(res);
+          });
+          // Promise path
+          if (result && typeof result.then === 'function') {
+            return result.then(function(res) {
+              if (res && typeof res === 'object') res.ql_lang = 'en';
+              return res;
+            });
+          }
+          return result;
+        };
+      }
+
+      // Patch immediately if chrome is already available (real extension)
+      try {
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+          patchStorage(chrome.storage.local);
+          patchStorage(chrome.storage.sync);
+        }
+      } catch(e) {}
+
+      // Also patch after chrome-mock.js sets up the mock (preview mode)
+      document.addEventListener('DOMContentLoaded', function() {
+        try {
+          if (typeof chrome !== 'undefined' && chrome.storage) {
+            patchStorage(chrome.storage.local);
+            patchStorage(chrome.storage.sync);
+          }
+        } catch(e) {}
+      });
+
+      // Patch sessionStorage reads
+      try {
+        var _ssGet = sessionStorage.getItem.bind(sessionStorage);
+        sessionStorage.getItem = function(key) {
+          if (key && key.toLowerCase().includes('lang')) return 'en';
+          return _ssGet(key);
+        };
+        sessionStorage.setItem = (function(_orig) {
+          return function(key, val) {
+            if (key && key.toLowerCase().includes('lang')) val = 'en';
+            return _orig(key, val);
+          };
+        })(sessionStorage.setItem.bind(sessionStorage));
+      } catch(e) {}
+
+      // Patch navigator.language fallback
+      try {
+        Object.defineProperty(navigator, 'language',  { get: function(){ return 'en'; }, configurable: true });
+        Object.defineProperty(navigator, 'languages', { get: function(){ return ['en','en-US']; }, configurable: true });
+      } catch(e) {}
+    })();
+  </script>
+  <script src="i18n.js?v=20260703d" defer></script>
+  <script src="sidepanel-templates.js?v=20260703d" defer></script>
+  <script src="remove-history.js?v=20260703d" defer></script>
+  <script src="sounds.js?v=20260703d" defer></script>
+  <script src="itfair-license-bridge.js?v=20260703d" defer></script>
+  <script src="sidepanel.js?v=20260703d" defer></script>
+  <script src="branding-overrides.js?v=20260703d" defer></script>
+  <script>
+    // Replace the license-gate icon with the TSG shield logo
+    (function() {
+      const SHIELD = 'assets/shield-v2.png';
+      const BRAND_CLASS = 'sp-brand-logo';
+
+      function swapBodyIcons() {
+        const body = document.getElementById('sp-body');
+        if (!body) return;
+        body.querySelectorAll('img').forEach(img => {
+          if (img.classList.contains(BRAND_CLASS)) return;
+          // Replace any icon that is NOT our already-set brand logo
+          if (img.src !== location.origin + '/' + SHIELD && img.src !== SHIELD) {
+            img.src = SHIELD;
+            img.style.width = '110px';
+            img.style.height = '110px';
+            img.style.borderRadius = '0';
+            img.style.background = 'transparent';
+          }
+          // Strip white background from icon wrapper
+          if (img.parentElement) {
+            img.parentElement.style.background = 'transparent';
+            img.parentElement.style.boxShadow = 'none';
+            img.parentElement.style.border = 'none';
+          }
+        });
+      }
+
+      // Watch for any DOM or attribute changes inside the body
+      const observer = new MutationObserver(() => swapBodyIcons());
+      observer.observe(document.body, {
+        childList: true, subtree: true, attributes: true, attributeFilter: ['src']
+      });
+
+      // Also poll as a safety net
+      const interval = setInterval(swapBodyIcons, 300);
+      setTimeout(() => clearInterval(interval), 10000);
+
+      document.addEventListener('DOMContentLoaded', swapBodyIcons);
+    })();
+  </script>
+  <script>
+    // Aggressively remove the PLAN toggle button regardless of when it's injected
+    (function() {
+      function removePlanBtn() {
+        document.querySelectorAll('div.sp-action-left, [class*="plano"],[class*="modo-plan"],[id*="plano"],[id*="modo-plan"]').forEach(function(el) {
+          el.remove();
+        });
+        document.querySelectorAll('button, label, div, span').forEach(function(el) {
+          if (el.textContent && el.textContent.trim() === 'PLAN') {
+            var parent = el.closest('[class*="plano"],[class*="plan"]') || el.parentElement;
+            if (parent) parent.remove(); else el.remove();
+          }
+        });
+      }
+      removePlanBtn();
+      new MutationObserver(removePlanBtn).observe(document.body, { childList: true, subtree: true });
+    })();
+  </script>
+  <script>
+    // Show bell + logout only after the license gate is gone (user logged in)
+    (function() {
+      function unlockHeaderBtns() {
+        var gate = document.querySelector('.sp-license-gate');
+        if (!gate || gate.offsetParent === null || gate.style.display === 'none' || !document.body.contains(gate)) {
+          document.querySelectorAll('.sp-notif-btn, .sp-logout-btn').forEach(function(btn) {
+            btn.classList.add('sp-unlocked');
+          });
+          obs.disconnect();
+        }
+      }
+      var obs = new MutationObserver(unlockHeaderBtns);
+      obs.observe(document.body, { childList: true, subtree: true, attributes: true });
+      unlockHeaderBtns();
+    })();
+  </script>
+</body>
+</html>

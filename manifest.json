@@ -1,0 +1,103 @@
+{
+  "manifest_version": 3,
+  "name": "TSG Controller",
+  "version": "3.8.6",
+  "description": "Developed by TSG Controller",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "sidePanel",
+    "cookies",
+    "alarms"
+  ],
+  "host_permissions": [
+    "https://*.lovable.dev/*",
+    "https://api.lovable.dev/*",
+    "https://lovable.dev/*",
+    "https://lovable-api.com/*",
+    "https://tvttbagljqbkcobruwnl.supabase.co/*",
+    "https://itf2.lovable.app/*",
+    "https://id-preview--aff06c8e-5d0f-47ac-ac6d-aa92bf9fe826.lovable.app/*"
+  ],
+  "action": {
+    "default_title": "TSG Controller",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.lovable.dev/*",
+        "https://lovable.dev/*"
+      ],
+      "js": [
+        "pageHook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://*.lovable.dev/*",
+        "https://lovable.dev/*",
+        "https://api.lovable.dev/*"
+      ],
+      "js": [
+        "jszip.min.js",
+        "hwFingerprint.js",
+        "sounds.js",
+        "i18n.js",
+        "content-templates.js",
+        "itfair-license-bridge.js",
+        "content.js",
+        "branding-overrides.js",
+        "watchdog.js"
+      ],
+      "css": [
+        "floating.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "sounds/error-payment.mp3",
+        "sounds/error-ratelimit.mp3",
+        "sounds/error-token.mp3",
+        "assets/logo-master-lovable.png",
+        "assets/logo-master-lovable-square.png",
+        "assets/icon16.png",
+        "assets/icon32.png",
+        "assets/icon48.png",
+        "assets/icon128.png",
+        "sp-connection-guard.js"
+      ],
+      "matches": [
+        "https://*.lovable.dev/*",
+        "https://lovable.dev/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; connect-src https://itf2.lovable.app https://id-preview--aff06c8e-5d0f-47ac-ac6d-aa92bf9fe826.lovable.app https://tvttbagljqbkcobruwnl.supabase.co https://*.lovable.dev https://api.lovable.dev https://lovable-api.com; img-src 'self' blob: data: https:; style-src 'self' 'unsafe-inline'; media-src 'self'"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}
